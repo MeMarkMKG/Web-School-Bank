@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบฝาก-ถอนเงินนักเรียน</title>
+  <meta name="description" content="ระบบบันทึกการฝาก-ถอนเงินของนักเรียน พร้อมจัดการและแก้ไขรายชื่อนักเรียนได้ทุกเมื่อ" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header__inner">
+      <div class="brand">
+        <span class="brand__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7.5Z" />
+            <path d="M3 8.5h13" />
+            <circle cx="17" cy="14" r="1.2" fill="currentColor" stroke="none" />
+          </svg>
+        </span>
+        <div class="brand__text">
+          <h1 class="brand__title">ระบบฝาก-ถอนเงินนักเรียน</h1>
+          <p class="brand__subtitle">บันทึกการออมของนักเรียน จัดการรายชื่อได้ทุกเมื่อ</p>
+        </div>
+      </div>
+      <span id="modeBadge" class="badge badge--demo">กำลังเชื่อมต่อ…</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="stats" aria-label="ภาพรวมบัญชี">
+      <article class="stat">
+        <span class="stat__icon stat__icon--indigo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 17.5V19" />
+            <circle cx="10" cy="7.5" r="3.5" />
+            <path d="M20 19v-1.5a3.5 3.5 0 0 0-2.6-3.4" />
+            <path d="M15.6 4.2a3.5 3.5 0 0 1 0 6.6" />
+          </svg>
+        </span>
+        <div class="stat__body">
+          <p class="stat__label">จำนวนนักเรียน</p>
+          <p class="stat__value"><span id="statStudents">0</span> <small>คน</small></p>
+        </div>
+      </article>
+
+      <article class="stat">
+        <span class="stat__icon stat__icon--teal" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8.5A2.5 2.5 0 0 1 5.5 6H18a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V8.5Z" />
+            <path d="M3 9h13" />
+            <circle cx="17.5" cy="14.5" r="1.2" fill="currentColor" stroke="none" />
+          </svg>
+        </span>
+        <div class="stat__body">
+          <p class="stat__label">ยอดเงินคงเหลือรวม</p>
+          <p class="stat__value"><span id="statBalance">0.00</span> <small>บาท</small></p>
+        </div>
+      </article>
+
+      <article class="stat">
+        <span class="stat__icon stat__icon--amber" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4v10" />
+            <path d="m8 10 4 4 4-4" />
+            <path d="M4 16.5V18a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1.5" />
+          </svg>
+        </span>
+        <div class="stat__body">
+          <p class="stat__label">ยอดฝากวันนี้</p>
+          <p class="stat__value"><span id="statDepositToday">0.00</span> <small>บาท</small></p>
+        </div>
+      </article>
+
+      <article class="stat">
+        <span class="stat__icon stat__icon--rose" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20V10" />
+            <path d="m8 14 4-4 4 4" />
+            <path d="M4 7.5V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1.5" />
+          </svg>
+        </span>
+        <div class="stat__body">
+          <p class="stat__label">ยอดถอนวันนี้</p>
+          <p class="stat__value"><span id="statWithdrawToday">0.00</span> <small>บาท</small></p>
+        </div>
+      </article>
+    </section>
+
+    <section class="card">
+      <div class="card__header">
+        <div>
+          <h2 class="card__title">รายชื่อนักเรียน</h2>
+          <p class="card__subtitle" id="studentsCount">กำลังโหลดข้อมูล…</p>
+        </div>
+        <div class="card__tools">
+          <input id="studentSearch" class="input search" type="search" placeholder="ค้นหาชื่อ / ชั้นเรียน" aria-label="ค้นหานักเรียน" />
+          <button id="btnAddStudent" class="btn btn--primary" type="button">
+            <span aria-hidden="true">+</span> เพิ่มนักเรียน
+          </button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">ชื่อนักเรียน</th>
+              <th scope="col">ชั้น/ห้อง</th>
+              <th scope="col">ยอดคงเหลือ (บาท)</th>
+              <th scope="col">จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="studentsTableBody">
+            <tr class="empty-row"><td colspan="4">กำลังโหลดข้อมูล…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card__header">
+        <div>
+          <h2 class="card__title">ประวัติการทำรายการ</h2>
+          <p class="card__subtitle" id="historyCount">กำลังโหลดข้อมูล…</p>
+        </div>
+        <div class="card__tools">
+          <input id="historySearch" class="input search" type="search" placeholder="ค้นหาชื่อ / หมายเหตุ" aria-label="ค้นหาประวัติการทำรายการ" />
+          <select id="historyType" class="select select--filter" aria-label="กรองประเภทรายการ">
+            <option value="all">ทุกประเภท</option>
+            <option value="deposit">ฝากเงิน</option>
+            <option value="withdraw">ถอนเงิน</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">วันที่</th>
+              <th scope="col">นักเรียน</th>
+              <th scope="col">ประเภท</th>
+              <th scope="col">จำนวนเงิน</th>
+              <th scope="col">คงเหลือ</th>
+              <th scope="col">หมายเหตุ</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <tr class="empty-row"><td colspan="6">กำลังโหลดข้อมูล…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>ระบบฝาก-ถอนเงินนักเรียน • ข้อมูลถูกบันทึกอัตโนมัติทุกครั้งที่ทำรายการ</p>
+  </footer>
+
+  <!-- เพิ่ม / แก้ไขนักเรียน -->
+  <dialog id="studentDialog" class="dialog" aria-labelledby="studentDialogTitle">
+    <form id="studentForm" class="dialog__form" novalidate>
+      <div>
+        <h2 class="dialog__title" id="studentDialogTitle">เพิ่มนักเรียนใหม่</h2>
+        <p class="hint">แก้ไขชื่อนักเรียนได้ทุกเมื่อจากปุ่ม “แก้ไข” ในตาราง</p>
+      </div>
+      <input type="hidden" id="studentId" />
+      <div class="field">
+        <span class="field__label">รูปภาพนักเรียน (ไม่บังคับ)</span>
+        <div class="photo-field">
+          <div class="photo-preview" id="studentPhotoPreview">
+            <img id="studentPhotoImg" alt="" hidden />
+            <span id="studentPhotoInitials">?</span>
+          </div>
+          <div class="photo-field__actions">
+            <div class="photo-field__buttons">
+              <button class="btn btn--sm btn--ghost" type="button" id="btnChoosePhoto">เลือกรูปภาพ</button>
+              <button class="btn btn--sm btn--ghost-danger" type="button" id="btnClearPhoto" hidden>ลบรูป</button>
+            </div>
+            <p class="hint">รองรับ JPG/PNG ระบบจะย่อขนาดให้อัตโนมัติ</p>
+          </div>
+          <input class="file-input" id="studentPhoto" type="file" accept="image/*" tabindex="-1" />
+          <input type="hidden" id="studentPhotoData" />
+        </div>
+      </div>
+      <div class="field">
+        <label class="field__label" for="studentName">ชื่อ-นามสกุลนักเรียน</label>
+        <input class="input" id="studentName" type="text" maxlength="80" autocomplete="off" placeholder="เช่น สมชาย ใจดี" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="studentRoom">ชั้น / ห้อง (ไม่บังคับ)</label>
+        <input class="input" id="studentRoom" type="text" maxlength="30" autocomplete="off" placeholder="เช่น ป.4/2" />
+      </div>
+      <div class="dialog__actions">
+        <button class="btn btn--ghost" type="button" data-close>ยกเลิก</button>
+        <button class="btn btn--primary" type="submit">บันทึก</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ฝาก / ถอนเงิน -->
+  <dialog id="txDialog" class="dialog" aria-labelledby="txDialogTitle">
+    <form id="txForm" class="dialog__form" novalidate>
+      <div>
+        <h2 class="dialog__title" id="txDialogTitle">รับฝากเงิน</h2>
+        <p class="hint" id="txStudentName">—</p>
+      </div>
+      <div class="tx-summary">
+        <span class="hint">ยอดคงเหลือปัจจุบัน</span>
+        <strong id="txBalance">0.00 บาท</strong>
+        <span class="badge badge--success" id="txTypeBadge">ฝาก</span>
+      </div>
+      <input type="hidden" id="txStudentId" />
+      <input type="hidden" id="txType" />
+      <div class="field">
+        <label class="field__label" for="txAmount">จำนวนเงิน (บาท)</label>
+        <input class="input" id="txAmount" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="0.00" />
+      </div>
+      <div class="field">
+        <label class="field__label" for="txNote">หมายเหตุ (ไม่บังคับ)</label>
+        <input class="input" id="txNote" type="text" maxlength="120" autocomplete="off" placeholder="เช่น ออมเงินรายสัปดาห์" />
+      </div>
+      <div class="dialog__actions">
+        <button class="btn btn--ghost" type="button" data-close>ยกเลิก</button>
+        <button class="btn btn--success" id="txSubmit" type="submit">ยืนยันการฝาก</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ยืนยันการลบ -->
+  <dialog id="confirmDialog" class="dialog" aria-labelledby="confirmTitle">
+    <form method="dialog" class="dialog__form">
+      <div>
+        <h2 class="dialog__title" id="confirmTitle">ยืนยันการลบ</h2>
+        <p class="dialog__message" id="confirmMessage"></p>
+      </div>
+      <div class="dialog__actions">
+        <button class="btn btn--ghost" value="cancel">ยกเลิก</button>
+        <button class="btn btn--danger" value="confirm" id="confirmDeleteBtn">ลบรายชื่อ</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toasts" class="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
